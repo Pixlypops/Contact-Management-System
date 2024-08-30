@@ -1,0 +1,167 @@
+This is a simple Contact Management System developed in C++. 
+
+The program allows users to manage their contacts by providing options to:
+
+Add New Contacts: Enter the name, phone number, and email address.
+View Contact List: Display the list of all saved contacts.
+Edit Existing Contacts: Modify the name, phone number, or email of a saved contact.
+Delete Contacts: Remove contacts from the list.
+Persistent Storage: Contacts are saved in a file for future retrieval, ensuring data is retained between sessions.
+
+This project demonstrates the use of object-oriented programming, file handling, and basic data structures in C++. The code is structured for clarity and simplicity, avoiding complex loops and dynamic memory allocation.
+
+Feel free to explore, modify, and use this code for your own projects!
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+#include <algorithm>
+#include <vector>
+#include <fstream>
+
+using namespace std;
+
+class Contacts {
+public:
+    string Name;
+    string Phone;
+    string Email;
+
+    Contacts(string name, string phone, string email) {
+        Name = name;
+        Phone = phone;
+        Email = email;
+    }
+
+    void contactDetails() {
+        cout << "Enter Name: ";
+        getline(cin, Name);
+        cout << "Enter phone number in format 000-000-0000: ";
+        getline(cin, Phone);
+        cout << "Enter email in format xxx@xxxx.xxx: ";
+        getline(cin, Email);
+    }
+};
+
+void displayContact(const Contacts& contact) {
+    cout << "Name: " << contact.Name << endl;
+    cout << "Phone: " << contact.Phone << endl;
+    cout << "Email: " << contact.Email << endl;
+}
+
+void saveContacts(const vector<Contacts>& contacts, const string& filename) {
+    ofstream ContactFile("contacts.txt", ios::app);
+    if (ContactFile.is_open()) {
+        for (const auto& contact : contacts) {
+            ContactFile << "Name: " << contact.Name << endl;
+            ContactFile << "Phone: " << contact.Phone << endl;
+            ContactFile << "Email: " << contact.Email << endl;
+        }
+        ContactFile.close();
+    } else {
+        cout << "Error opening file" << endl;
+    }
+}
+
+int main() {
+    cout << "Welcome to your Contact Management System!" << endl;
+    cout << "-----------------------------------------" << endl;
+    cout << "Please select an option from the menu below:" << endl;
+    cout << "1. Add a new contact" << endl;
+    cout << "2. Search for a contact" << endl;
+    cout << "3. Edit a contact" << endl;
+    cout << "4. Delete a contact" << endl;
+    cout << "5. Exit" << endl;
+    cout << "-----------------------------------------" << endl;
+
+    vector<Contacts> contacts;
+
+    while (true) {
+        cout << "Select an option: ";
+        int choice;
+        cin >> choice;
+        cin.ignore();
+
+        if (choice == 1) {
+            Contacts contact("", "", "");
+            contact.contactDetails();
+            contacts.push_back(contact);
+            cout << "Contact added successfully!\n" << endl;
+        } else if (choice == 2) {
+            cout << "Enter name to search for: ";
+            string name;
+            getline(cin, name);
+            transform(name.begin(), name.end(), name.begin(), ::tolower);
+            bool found = false;
+            for (auto& contact : contacts) {
+                string lowerName = contact.Name;
+                transform(lowerName.begin(), lowerName.end(), lowerName.begin(), ::tolower);
+                if (lowerName == name) {
+                    cout << "Contact Found!\n\nHere's the information you requested:\n";
+                    displayContact(contact);
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                cout << "Contact not found\n" << endl;
+            }
+        } else if (choice == 3) {
+            cout << "Enter name to edit: ";
+            string name;
+            getline(cin, name);
+            transform(name.begin(), name.end(), name.begin(), ::tolower);
+            bool found = false;
+            for (auto& contact : contacts) {
+                string lowerName = contact.Name;
+                transform(lowerName.begin(), lowerName.end(), lowerName.begin(), ::tolower);
+                if (lowerName == name) {
+                    cout << "Which field would you like to change? (Name/Phone/Email): ";
+                    string field;
+                    getline(cin, field);
+                    transform(field.begin(), field.end(), field.begin(), ::tolower);
+                    if (field == "name") {
+                        cout << "Enter new name: ";
+                        getline(cin, contact.Name);
+                    } else if (field == "phone") {
+                        cout << "Enter new phone number in format 000-000-0000: ";
+                        getline(cin, contact.Phone);
+                    } else if (field == "email") {
+                        cout << "Enter new email in format xxx@xxxx.com: ";
+                        getline(cin, contact.Email);
+                    }
+                    cout << "Contact updated successfully!\n" << endl;
+                    displayContact(contact);
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                cout << "Contact not found\n" << endl;
+            }
+        } else if (choice == 4) {
+            cout << "Enter name to delete: ";
+            string nameToDelete;
+            getline(cin, nameToDelete);
+            transform(nameToDelete.begin(), nameToDelete.end(), nameToDelete.begin(), ::tolower);
+            for (auto it = contacts.begin(); it != contacts.end(); ++it) {
+                string lowerName = it->Name;
+                transform(lowerName.begin(), lowerName.end(), lowerName.begin(), ::tolower);
+                if (lowerName == nameToDelete) {
+                    contacts.erase(it);
+                    cout << "Contact deleted successfully!\n" << endl;
+                    break;
+                }
+            }
+        } else if (choice == 5) {
+            cout << "Thank you for using the Contact Management System!" << endl;
+            cout << "Exiting..." << endl;
+            break;
+        } else {
+            cout << "Invalid choice. Please select between 1 and 5." << endl;
+        }
+    }
+
+    return 0;
+}
