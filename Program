@@ -1,16 +1,4 @@
-This is a simple Contact Management System developed in C++. 
 
-The program allows users to manage their contacts by providing options to:
-
-Add New Contacts: Enter the name, phone number, and email address.
-View Contact List: Display the list of all saved contacts.
-Edit Existing Contacts: Modify the name, phone number, or email of a saved contact.
-Delete Contacts: Remove contacts from the list.
-Persistent Storage: Contacts are saved in a file for future retrieval, ensuring data is retained between sessions.
-
-This project demonstrates the use of object-oriented programming, file handling, and basic data structures in C++. The code is structured for clarity and simplicity, avoiding complex loops and dynamic memory allocation.
-
-Feel free to explore, modify, and use this code for your own projects!
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 
